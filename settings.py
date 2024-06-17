@@ -27,6 +27,8 @@ class Settings():
     
     # How quickly the game speeds up
         self.speedup_scale = 1.1
+
+        self.sounddict={'explosion':'sounds/alien.wav','bullet':'sounds/bullet.mp3',"ship":"sounds/ship.mp3","gameover":"sounds/gameover.mp3"}
     
     # Initialize dynamic settings
         self.initialize_dynamic_settings()
