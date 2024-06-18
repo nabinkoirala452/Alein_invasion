@@ -87,22 +87,28 @@ def check_play_button(ai_settings, screen, stats,sb,play_button, ship, aliens, b
 
 
 
-def update_screen(ai_settings, screen,sb,stats, ship,aliens,bullets,play_button):
+def update_screen(ai_settings, screen,sb,stats, ship,aliens,bullets,play_button,bomb):
     """Update images on the screen and flip to the new screen."""
     # Redraw the screen during each pass through the loop.
     screen.fill(ai_settings.bg_color)
     #it will draw image to the screen speciefied by self.react
-    ship.blitme()
+    
+    ship.blitme(stats)
     aliens.draw(screen)
+    bomb.blitme()
+
 
     for bullet in bullets.sprites():
         bullet.draw_bullet()
+
+    
 
     # Draw the score information.
     sb.show_score()
     # Draw the play button if the game is inactive
     if not stats.game_active:
         play_button.draw_button()
+
     
 
     
@@ -139,7 +145,8 @@ def check_bullet_alien_collisions(ai_settings, screen,stats,sb, ship, aliens, bu
         check_high_score(stats,sb)
     
     # If all aliens are destroyed, remove existing bullets and create a new fleet.
-    start_new_level(ai_settings,screen,ship,aliens,bullets,stats,sb)
+    elif len(aliens)==0:
+        start_new_level(ai_settings,screen,ship,aliens,bullets,stats,sb)
        
         
 
@@ -208,7 +215,6 @@ def update_aliens(ai_settings, sb,stats, screen, ship, aliens, bullets,sound):
     
 
 def ship_hit(ai_settings,sb, stats, screen, ship, aliens, bullets,sound):
-
     """Respond to ship being hit by alien."""
     sound.play_sound_effect("ship")
     # Decrement ships_left.
@@ -260,8 +266,8 @@ def read_high_score(stats,mode):
     fp.close()
 
 def start_new_level(ai_settings,screen,ship,aliens,bullets,stats,sb):
-      if len(aliens) == 0:
-        # If the entire fleet is destroyed, start a new level
+        stats.shield_active=True
+    # If the entire fleet is destroyed, start a new level
         # Destroy existing bullets, speed up game, and create new fleet.
         bullets.empty()
         ai_settings.increase_speed()
@@ -269,6 +275,22 @@ def start_new_level(ai_settings,screen,ship,aliens,bullets,stats,sb):
         stats.level += 1 
         sb.prep_level()
         create_fleet(ai_settings, screen, ship, aliens)
+
+
+def update_bomb(ai_settings,sb, stats, screen, ship, aliens, bullets,sound,bomb):
+    collision = ship.rect.colliderect(bomb.rect)
+    if collision:
+        if stats.shield_active:
+            stats.shield_active=False
+            bomb.reset_position()
+        else:
+            ship_hit(ai_settings,sb, stats, screen, ship, aliens, bullets,sound)
+    else:
+        if(bomb.y>600):
+            bomb.reset_position()
+        else:
+            bomb.y+=0.2
+            bomb.rect.y=bomb.y
 
 
         

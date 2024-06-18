@@ -19,9 +19,10 @@ class Ship(Sprite):
         
         # Scale the image while maintaining aspect ratio
         # self.image = pygame.transform.scale(original_image, (int(original_image.get_width() * scale_factor), new_height))
-        self.image=pygame.image.load('images\ship.bmp')
+        self.image=pygame.image.load('images/ship.bmp')
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
+
 
         # Start each new ship at the bottom center of the screen.
         self.rect.centerx = self.screen_rect.centerx
@@ -31,6 +32,8 @@ class Ship(Sprite):
         # moving flags
         self.moving_right = False
         self.moving_left=False 
+
+
     def update(self):
         """Update the ship's position based on the movement flag."""
         if self.moving_right and (self.rect.right < self.screen_rect.right):
@@ -43,9 +46,17 @@ class Ship(Sprite):
            
 
 
-    def blitme(self):
+    def blitme(self,stats):
         """Draw the ship at its current location."""
         self.screen.blit(self.image, self.rect)
+        if stats.shield_active:
+            pygame.draw.circle(
+                self.screen,
+                self.ai_settings.shield_color,
+                (self.rect.centerx, self.rect.centery),
+                self.ai_settings.shield_radius,
+                self.ai_settings.shield_thickness
+            )
     
     def center_ship(self):
         """Center the ship on the screen."""

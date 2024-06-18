@@ -8,7 +8,7 @@ from game_stats import GameStats
 from button import Button 
 from scoreboard import Scoreboard
 from sound import SoundManager
-
+from bomb import Bomb
 
 def run_game():
     # Initialize game and create a screen object.
@@ -27,13 +27,12 @@ def run_game():
     ship = Ship(ai_settings,screen)
     bullets=Group()
     aliens = Group()
+    bomb=Bomb(screen)
     # Create the fleet of aliens. 
     gf.create_fleet(ai_settings, screen, ship,aliens)
 
 
-
-
-
+    
     # Start the main loop for the game.
     while True:
         # Watch for keyboard and mouse events.
@@ -42,6 +41,7 @@ def run_game():
             ship.update()
             gf.update_bullets(ai_settings, screen,stats,sb, ship, aliens, bullets,sound)
             gf.update_aliens(ai_settings,sb,stats,screen,ship,aliens,bullets,sound)
-        gf.update_screen(ai_settings,screen,sb,stats,ship,aliens,bullets,play_button)
+            gf.update_bomb(ai_settings,sb, stats, screen, ship, aliens, bullets,sound,bomb)
+        gf.update_screen(ai_settings,screen,sb,stats,ship,aliens,bullets,play_button,bomb)
 
 run_game()
