@@ -43,6 +43,7 @@ Welcome to the Alien Invasion Game, a classic arcade-style game built using Pyth
 To start the game, simply run the `alien_invasion.py` script:
 ```bash
 python alien_invasion.py
+```
 
 ## Game Controls
 - **Arrow keys** - Move the spaceship left or right
